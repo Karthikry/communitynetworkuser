@@ -134,19 +134,29 @@ const Promo = () => {
   };
 
   const handleEdit = async (id) => {
-    //  console.log(id);
     setEditMode(true); // Set editMode to true
     setOpen(true);
-    var res = await getPromoById(headers, id);
-    console.log(res);
 
-    let det = res.data;
-    setrPromoId(det.promoId);
-    setUserData({
-      promoName: det.promoName,
-      description: det.description,
-      youTube: det.youTube
-    });
+    try {
+      // Fetch promo details by id
+      const res = await getPromoById(headers, id);
+      const det = res.data;
+
+      if (det) {
+        // Set promoId and userData with fetched data
+        setPromoId(det.promoId);
+        setUserData({
+          promoName: det.promoName,
+          description: det.description,
+          youTube: det.youTube
+        });
+      } else {
+        // Handle case where no data is returned
+        console.error('No promo data found for id:', id);
+      }
+    } catch (error) {
+      console.error('Error fetching promo details:', error);
+    }
   };
 
   const handleAddPromo = () => {
@@ -173,6 +183,8 @@ const Promo = () => {
             promoId,
             updatedBy: { userId: user.userId }
           };
+
+          // Correct order of arguments
           await updatedPromo(updatedData, headers);
         } else {
           await postPromoData(

@@ -44,24 +44,25 @@ export const getPromoById = async (headers, id) => {
 };
 
 // todo==> UPDATE PROMO
-export const updatedPromo = async (headers, updateddata) => {
-  await axios({
-    method: 'PUT',
-    url: `${BaseUrl}/promo/v1/updatePromo`,
-    headers: headers,
-    data: updateddata
-  })
-    .then(function (res) {
-      console.log(res);
-      if (res.data.responseCode === 201) {
-        alert(res.data.message);
-      } else if (res.data.responseCode === 400) {
-        alert(res.data.errorMessage);
-      }
-    })
-    .catch(function (error) {
-      console.log(error);
+export const updatedPromo = async (updateddata, headers) => {
+  try {
+    const response = await axios({
+      method: 'PUT',
+      url: `${BaseUrl}/promo/v1/updatePromo`,
+      headers: headers,
+      data: updateddata
     });
+
+    if (response.data.responseCode === 201) {
+      alert(response.data.message);
+    } else if (response.data.responseCode === 400) {
+      alert(response.data.errorMessage);
+    } else {
+      alert('Unexpected response code');
+    }
+  } catch (error) {
+    console.error('Error updating promo:', error);
+  }
 };
 
 //todo ==> DELETE  PROMO DATA
