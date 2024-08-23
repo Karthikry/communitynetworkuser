@@ -22,6 +22,7 @@ import Transitions from 'ui-component/extended/Transitions';
 import { IconLogout, IconSettings } from '@tabler/icons-react';
 import axios from 'axios';
 import { BaseUrl } from 'BaseUrl';
+import Swal from 'sweetalert2';
 
 const ProfileSection = () => {
   const theme = useTheme();
@@ -81,12 +82,18 @@ const ProfileSection = () => {
   };
 
   const handleLogout = () => {
-    if (window.confirm('Do you want to Logout?')) {
-      sessionStorage.removeItem('user');
-      navigate('/');
-    }
+    Swal.fire({
+      title: 'Do you want to Logout?',
+      showDenyButton: true,
+      confirmButtonText: 'Yes',
+      denyButtonText: 'No'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        sessionStorage.removeItem('user');
+        navigate('/');
+      }
+    });
   };
-
   return (
     <>
       <Chip

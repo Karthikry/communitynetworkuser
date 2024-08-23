@@ -26,6 +26,7 @@ import { DeleteForever, Edit } from '@mui/icons-material';
 import { deletePromo, fetchPromo, getPromoById, postPromoData, updatedPromo } from 'views/API/PromoApi';
 
 const columns = [
+  { id: 'promoId', label: 'ID' },
   { id: 'promoName', label: 'Name', minWidth: 100 },
   { id: 'description', label: 'Description', minWidth: 100 },
   { id: 'youTube', label: 'Youtube' },

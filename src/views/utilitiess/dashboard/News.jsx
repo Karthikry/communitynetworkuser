@@ -23,6 +23,7 @@ import axios from 'axios';
 import { addNews, deleteNews, fetchNews, getNewsById, updatedNews } from 'views/API/NewsApi';
 
 const columns = [
+  { id: 'newsId', label: 'ID' },
   { id: 'newsName', label: 'Name', minWidth: 100 },
   { id: 'description', label: 'Description', minWidth: 100 },
   { id: 'file', label: 'File' },

@@ -23,6 +23,7 @@ import axios from 'axios';
 import { addSuccess, deleteSuccess, fetchSuccess, getSuccessById, updatedSuccess } from 'views/API/SuccessStoryApi';
 
 const columns = [
+  { id: 'successstoryId', label: 'ID' },
   { id: 'successstoryName', label: 'Name', minWidth: 100 },
   { id: 'description', label: 'Description', minWidth: 100 },
   { id: 'file', label: 'File' },

@@ -21,6 +21,7 @@ import axios from 'axios';
 import { DeleteForever, Edit } from '@mui/icons-material';
 
 const columns = [
+  { id: 'advertisementId', label: 'ID' },
   { id: 'advertisementName', label: 'Name', minWidth: 100 },
   { id: 'description', label: 'Description', minWidth: 100 },
   { id: 'file', label: 'File' },

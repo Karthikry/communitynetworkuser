@@ -3,6 +3,9 @@ import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
 import Login from 'views/pages/authentication3/Login3';
 import Register from 'views/pages/authentication3/Register3';
+import ForgotPassword from 'views/pages/authentication3/ForgotPassword';
+import VerifyOtp from 'views/pages/authentication3/VerifyOtp';
+import ResetPassword from 'views/pages/authentication3/ResetPassword';
 import ProtectedRoute from './ProtectedRoute';
 
 // dashboard routing
@@ -21,9 +24,13 @@ const UtilsCertificate = Loadable(lazy(() => import('views/utilitiess/mcqUtiliti
 
 const MainRoutes = {
   path: '/',
+
   children: [
     { path: '/', element: <Login /> },
     { path: '/register', element: <Register /> },
+    { path: '/forgot-password', element: <ForgotPassword /> },
+    { path: '/verify-otp', element: <VerifyOtp /> },
+    { path: '/reset-password', element: <ResetPassword /> },
     {
       path: '/',
       element: <ProtectedRoute element={<MainLayout />} />,

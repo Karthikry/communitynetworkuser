@@ -153,7 +153,7 @@ const SwitchSection = () => {
                             <Typography variant="subtitle1">All Switches</Typography>
                             <Chip
                               size="small"
-                              label="08"
+                              label="09"
                               sx={{
                                 color: theme.palette.background.default,
                                 bgcolor: theme.palette.success.dark
