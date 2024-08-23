@@ -313,7 +313,7 @@ const Promo = () => {
           <DialogActions sx={{ pt: 3 }}>
             <Button onClick={() => setOpen(false)}>Cancel</Button>
             <Button type="submit" variant="contained" color="primary">
-              {editMode ? 'Update' : 'Submit'}
+              Save
             </Button>
           </DialogActions>
         </Box>

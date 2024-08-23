@@ -20,7 +20,6 @@ const icons = {
   IconWindmill,
   IconSettings,
   IconUser,
-  IconPaperBag,
   IconCurrencyRupee,
   IconCertificate,
   IconAd2
