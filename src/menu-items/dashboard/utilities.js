@@ -8,7 +8,8 @@ import {
   IconUser,
   IconPaperBag,
   IconCurrencyRupee,
-  IconCertificate // Make sure this icon exists
+  IconCertificate,
+  IconAd2
 } from '@tabler/icons-react';
 
 // constant
@@ -21,7 +22,8 @@ const icons = {
   IconUser,
   IconPaperBag,
   IconCurrencyRupee,
-  IconCertificate
+  IconCertificate,
+  IconAd2
 };
 
 // ==============================|| UTILITIES MENU ITEMS ||============================== //
@@ -35,7 +37,7 @@ const utilities = {
       id: 'ads',
       title: 'Ads',
       type: 'collapse',
-      icon: icons.IconPaperBag,
+      icon: icons.IconAd2,
       url: null,
       children: [
         {

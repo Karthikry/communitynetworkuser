@@ -11,7 +11,7 @@ const Payments = () => {
   const theme = useTheme();
 
   return (
-    <MainCard title=" Mcq Payments">
+    <MainCard title=" Payments">
       <Grid container spacing={gridSpacing}></Grid>
     </MainCard>
   );
