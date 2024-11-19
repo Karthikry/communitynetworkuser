@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # EduKartOrgAdmin
+=======
+# cnetworkuserui
+>>>>>>> 4745f7db833cd8f65d4f6259b849169f1759bf74
 
 
 
@@ -15,14 +19,22 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
+<<<<<<< HEAD
 git remote add origin https://gitlab.com/chethanreddy2/edukartorgadmin.git
+=======
+git remote add origin https://gitlab.com/patilbusinesscart/cnetworkuserui.git
+>>>>>>> 4745f7db833cd8f65d4f6259b849169f1759bf74
 git branch -M main
 git push -uf origin main
 ```
 
 ## Integrate with your tools
 
+<<<<<<< HEAD
 - [ ] [Set up project integrations](https://gitlab.com/chethanreddy2/edukartorgadmin/-/settings/integrations)
+=======
+- [ ] [Set up project integrations](https://gitlab.com/patilbusinesscart/cnetworkuserui/-/settings/integrations)
+>>>>>>> 4745f7db833cd8f65d4f6259b849169f1759bf74
 
 ## Collaborate with your team
 
