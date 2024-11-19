@@ -9,18 +9,24 @@ import ResetPassword from 'views/pages/authentication3/ResetPassword';
 import ProtectedRoute from './ProtectedRoute';
 
 // dashboard routing
-const DashboardDefault = Loadable(lazy(() => import('views/dashboard')));
+// const DashboardDefault = Loadable(lazy(() => import('views/dashboard')));
+const DashboardDefault = Loadable(lazy(() => import('views/utilitiess/mcqUtilities/Advertisement')));
+
 
 // utilities routing
 const UtilsBanner = Loadable(lazy(() => import('views/utilitiess/dashboard/Banner')));
 const UtilsPromo = Loadable(lazy(() => import('views/utilitiess/dashboard/Promo')));
 const UtilsNews = Loadable(lazy(() => import('views/utilitiess/dashboard/News')));
 const UtilsSuccessStory = Loadable(lazy(() => import('views/utilitiess/dashboard/SuccessStory')));
+const UtilsNotication = Loadable(lazy(() => import('views/utilitiess/dashboard/Notification')));
 
-const UtilsUsers = Loadable(lazy(() => import('views/utilitiess/mcqUtilities/Users')));
+// const UtilsAds= Loadable(lazy(() => import('views/utilitiess/mcqUtilities/Advertisement')));
+
+const UtilsPayments = Loadable(lazy(() => import('views/utilitiess/mcqUtilities/Subscription')));
+const UtilsRequest = Loadable(lazy(() => import('views/utilitiess/mcqUtilities/Request')));
+const UtilsMembership = Loadable(lazy(() => import('views/utilitiess/mcqUtilities/Membership')));
 const UtilsSettings = Loadable(lazy(() => import('views/utilitiess/mcqUtilities/Settings')));
-const UtilsPayments = Loadable(lazy(() => import('views/utilitiess/mcqUtilities/Payments')));
-const UtilsCertificate = Loadable(lazy(() => import('views/utilitiess/mcqUtilities/certificate/CertificateGenerator')));
+const UtilsUsers = Loadable(lazy(() => import('views/utilitiess/mcqUtilities/Users')));
 
 const MainRoutes = {
   path: '/',
@@ -39,12 +45,16 @@ const MainRoutes = {
           path: 'dashboard',
           children: [
             { path: '', element: <DashboardDefault /> },
+            // { path: 'ads', element: <UtilsAds /> },
+        
             { path: 'banner', element: <UtilsBanner /> },
             { path: 'news', element: <UtilsNews /> },
             { path: 'promo', element: <UtilsPromo /> },
             { path: 'success-story', element: <UtilsSuccessStory /> },
-            { path: 'certificate', element: <UtilsCertificate /> },
-            { path: 'payments', element: <UtilsPayments /> },
+            { path: 'notification', element: <UtilsNotication /> },
+            { path: 'subscription', element: <UtilsPayments /> },
+            { path:'requests', element: <UtilsRequest /> },   
+            { path:'membership', element: <UtilsMembership /> },
             { path: 'users', element: <UtilsUsers /> },
             { path: 'settings', element: <UtilsSettings /> }
           ]

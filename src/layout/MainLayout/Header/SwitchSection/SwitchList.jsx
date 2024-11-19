@@ -38,14 +38,23 @@ const SwitchList = ({ setSelectedSwitch, setOpen }) => {
     setOpen(false);
   };
 
+  
+  const handleMarket = () => {
+    setSelectedSwitch('Comminity Network');
+    navigate('/marketplace');
+    setOpen(false);
+  };
+
+
+
   const handleEcom = () => {
     setSelectedSwitch('Ecommerce');
     navigate('/ecommerce');
     setOpen(false);
   };
   const handleAcademy = () => {
-    setSelectedSwitch('Academy');
-    navigate('/academy');
+    // setSelectedSwitch('Academy');
+    navigate('/dashboard');
     setOpen(false);
   };
   const handleUpSkills = () => {
@@ -53,6 +62,8 @@ const SwitchList = ({ setSelectedSwitch, setOpen }) => {
     navigate('/upSkills');
     setOpen(false);
   };
+
+
 
   return (
     <List
@@ -81,47 +92,61 @@ const SwitchList = ({ setSelectedSwitch, setOpen }) => {
         </ListItem>
       </ListItemWrapper>
       <Divider />
-      <ListItemWrapper>
-        <ListItem alignItems="center">
-          <ListItemText primary="Papers" />
-        </ListItem>
-      </ListItemWrapper>
-      <Divider />
-      <ListItemWrapper>
-        <ListItem
-          alignItems="center"
-          // onClick={handleAcademy}
-        >
-          <ListItemText primary="Academy" />
-        </ListItem>
-      </ListItemWrapper>
-      <Divider />
-      <ListItemWrapper>
-        <ListItem
-          alignItems="center"
-          // onClick={handleUpSkills}
-        >
-          <ListItemText primary="Upskills" />
-        </ListItem>
-      </ListItemWrapper>
-      <Divider />
-      <ListItemWrapper>
-        <ListItem alignItems="center">
-          <ListItemText primary="Research" />
-        </ListItem>
-      </ListItemWrapper>
-      <Divider />
-      <ListItemWrapper>
-        <ListItem
-          alignItems="center"
-          // onClick={handleEcom}
-        >
-          <ListItemText primary="Ecommerce" />
+
+      {/* <ListItemWrapper>
+        <ListItem alignItems="center" onClick={handleMarket}>
+          <ListItemText primary="My Project" />
         </ListItem>
       </ListItemWrapper>
       <Divider />
 
+      <ListItemWrapper>
+        <ListItem alignItems="center">
+          <ListItemText primary="Internship" />
+        </ListItem>
+      </ListItemWrapper>
+      <Divider /> */}
+
+      {/* <ListItemWrapper>
+        <ListItem
+          alignItems="center"
+          onClick={handleAcademy}
+        >
+          <ListItemText primary="P-Network" />
+        </ListItem>
+      </ListItemWrapper>
       <Divider />
+       */}
+      {/* 
+      <ListItemWrapper>
+        <ListItem
+          alignItems="center"
+          onClick={handleUpSkills}
+        >
+          <ListItemText primary="Upskills" />
+        </ListItem>
+      </ListItemWrapper>
+      <Divider /> */}
+
+      {/* <ListItemWrapper>
+        <ListItem alignItems="center">
+          <ListItemText primary="Research" />
+        </ListItem>
+      </ListItemWrapper>
+      <Divider /> */}
+
+
+      {/* <ListItemWrapper>
+        <ListItem
+          alignItems="center"
+          onClick={handleEcom}
+        >
+          <ListItemText primary="Ecommerce" />
+        </ListItem>
+      </ListItemWrapper>
+      <Divider /> */}
+
+      {/* <Divider />
       <ListItemWrapper>
         <ListItem alignItems="center">
           <ListItemText primary="My Product" />
@@ -139,7 +164,7 @@ const SwitchList = ({ setSelectedSwitch, setOpen }) => {
         <ListItem alignItems="center">
           <ListItemText primary="Document" />
         </ListItem>
-      </ListItemWrapper>
+      </ListItemWrapper> */}
     </List>
   );
 };

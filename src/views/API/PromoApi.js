@@ -1,85 +1,87 @@
 import axios from 'axios';
-import { BaseUrl } from '../../BaseUrl';
 
 //todo ==> POST PROMO DATA
 export const postPromoData = async (pdata, headers) => {
   try {
-    await axios({
-      method: 'POST',
-      url: `${BaseUrl}/promo/v1/createPromo`,
-      headers: headers,
-      data: JSON.stringify(pdata)
-    }).then(function (res) {
-      console.log(res);
-      if (res.data.responseCode === 201) {
-        alert('Promo  added successfully');
-      } else {
-        alert(res);
-      }
-    });
+    const response = await axios.post(
+      'https://executivetracking.cloudjiffy.net/Mahaasabha/promo/v1/createPromo',
+      pdata,
+      { headers }
+    );
+    if (response.data.responseCode === 201) {
+      alert('Promo added successfully');
+    } else {
+      alert(response.data.errorMessage || 'An error occurred');
+    }
   } catch (error) {
-    alert(error);
+    alert('Error adding promo: ' + error.message);
+    console.error('Error adding promo:', error);
   }
 };
 
-//todo ==> GET  PROMO DATA
+//todo ==> GET PROMO DATA
 export const fetchPromo = async (headers) => {
   try {
-    const response = await axios.get(`${BaseUrl}/promo/v1/getAllPromoByPagination/{pageNumber}/{pageSize}?pageNumber=0&pageSize=10`, {
-      headers: headers
-    });
+    const response = await axios.get(
+      'https://executivetracking.cloudjiffy.net/Mahaasabha/promo/v1/getAllPromoByPagination/{pageNumber}/{pageSize}?pageNumber=0&pageSize=10',
+      { headers }
+    );
     return response.data; // Extract and return the data from the response
   } catch (error) {
+    console.error('Error fetching promo data:', error);
     throw error; // Handle errors appropriately
   }
 };
 
 //todo ==> GET DATA BY PROMO ID
 export const getPromoById = async (headers, id) => {
-  return await axios({
-    method: 'GET',
-    url: `${BaseUrl}/promo/v1/getPromoByPromoId/{promoId}?promoId=${id}`,
-    headers: headers
-  });
-};
-
-// todo==> UPDATE PROMO
-export const updatedPromo = async (updateddata, headers) => {
   try {
-    const response = await axios({
-      method: 'PUT',
-      url: `${BaseUrl}/promo/v1/updatePromo`,
-      headers: headers,
-      data: updateddata
-    });
-
-    if (response.data.responseCode === 201) {
-      alert(response.data.message);
-    } else if (response.data.responseCode === 400) {
-      alert(response.data.errorMessage);
-    } else {
-      alert('Unexpected response code');
-    }
+    const response = await axios.get(
+      `https://executivetracking.cloudjiffy.net/Mahaasabha/promo/v1/getPromoByPromoId/{promoId}?promoId=${id}`, // Use the dynamic id
+      { headers }
+    );
+    return response.data;
   } catch (error) {
-    console.error('Error updating promo:', error);
+    console.error('Error fetching promo by ID:', error);
+    throw error;
   }
 };
 
-//todo ==> DELETE  PROMO DATA
+// todo ==> UPDATE PROMO
+export const updatedPromo = async (updatedData, headers) => {
+  try {
+    const response = await axios.put(
+      `https://executivetracking.cloudjiffy.net/Mahaasabha/promo/v1/updatePromo`, 
+      updatedData, 
+      { headers }
+    );
+
+    if (response.data.responseCode === 201) {
+      alert(response.data.message);
+    } else {
+      alert(response.data.errorMessage || 'An unexpected error occurred');
+    }
+  } catch (error) {
+    console.error('Error updating promo:', error);
+    alert('Error updating promo: ' + error.message);
+  }
+};
+
+//todo ==> DELETE PROMO DATA
 export const deletePromo = async (headers, id) => {
-  await axios({
-    method: 'DELETE',
-    url: `${BaseUrl}/promo/v1/deletePromoById/${id}`,
-    headers: headers
-  })
-    .then((res) => {
-      if (res.data.responseCode === 200) {
-        alert(res.data.message);
-      } else if (res.data.responseCode === 400) {
-        alert(res.data.errorMessage);
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  try {
+    const response = await axios.delete(
+      `https://executivetracking.cloudjiffy.net/Mahaasabha/promo/v1/deletePromoById/${id}`, // Use the dynamic id
+      { headers }
+    );
+    
+    if (response.data.responseCode === 200) {
+      alert(response.data.message);
+    } else {
+      alert(response.data.errorMessage || 'An unexpected error occurred');
+    }
+  } catch (error) {
+    console.error('Error deleting promo:', error);
+    alert('Error deleting promo: ' + error.message);
+  }
 };

@@ -40,6 +40,8 @@ const SwitchSection = () => {
       setSelectedSwitch('Academy');
     } else if (path.includes('/upSkills')) {
       setSelectedSwitch('Upskills');
+    }else if (path.includes('/marketplace')) {
+      setSelectedSwitch('My Project');
     }
   }, [location]);
 
@@ -153,7 +155,7 @@ const SwitchSection = () => {
                             <Typography variant="subtitle1">All Switches</Typography>
                             <Chip
                               size="small"
-                              label="09"
+                              label="02"
                               sx={{
                                 color: theme.palette.background.default,
                                 bgcolor: theme.palette.success.dark

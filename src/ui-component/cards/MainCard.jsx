@@ -17,7 +17,7 @@ const headerSX = {
 
 // ==============================|| CUSTOM MAIN CARD ||============================== //
 
-const MainCard = React.forwardRef(
+const   MainCard = React.forwardRef(
   (
     {
       border = false,

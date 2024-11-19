@@ -7,6 +7,8 @@ import dashboardMenuItems from 'menu-items/dashboard';
 import academyMenuItems from 'menu-items/academy';
 import upSkillsMenuItems from 'menu-items/upSkills';
 import ecommerceMenuItems from 'menu-items/ecommerce';
+import marketMenuItems from 'menu-items/marketplace';
+
 
 // Function to get menu items based on the current path
 const getMenuItems = (path) => {
@@ -18,6 +20,8 @@ const getMenuItems = (path) => {
     return academyMenuItems.items;
   } else if (path.startsWith('/upSkills')) {
     return upSkillsMenuItems.items;
+  }  else if (path.startsWith('/marketplace')) {
+    return marketMenuItems.items;
   } else {
     return [];
   }

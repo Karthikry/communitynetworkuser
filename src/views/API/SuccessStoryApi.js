@@ -4,7 +4,7 @@ import { BaseUrl } from '../../BaseUrl';
 export const fetchSuccess = async (headers) => {
   return await axios({
     method: 'get',
-    url: `${BaseUrl}/success/v1/getAllSuccessStoryByPagination/{pageNumber}/{pageSize}?pageNumber=0&pageSize=10`,
+    url: `https://executivetracking.cloudjiffy.net/Mahaasabha/success/v1/getAllSuccessStoryByPagination/{pageNumber}/{pageSize}?pageNumber=0&pageSize=10`,
     headers: headers
   });
 };
@@ -13,7 +13,7 @@ export const fetchSuccess = async (headers) => {
 export const getSuccessById = async (id, headers) => {
   return await axios({
     method: 'GET',
-    url: `${BaseUrl}/success/v1/getSuccessStoryById/{successstoryId}?successstoryId=${id}`,
+    url: `https://executivetracking.cloudjiffy.net/Mahaasabha/success/v1/getSuccessStoryById/{successstoryId}?successstoryId=${id}`,
     headers: headers
   });
 };
@@ -23,7 +23,7 @@ export const updatedSuccess = async (updatedData, headers) => {
   console.log(updatedData);
   return await axios({
     method: 'PUT',
-    url: `${BaseUrl}/success/v1/updateSuccessStory`,
+    url: `https://executivetracking.cloudjiffy.net/Mahaasabha/success/v1/updateSuccessStory`,
     headers: headers,
     data: updatedData
   })
@@ -44,7 +44,7 @@ export const updatedSuccess = async (updatedData, headers) => {
 export const deleteSuccess = async (id, headers) => {
   return await axios({
     method: 'delete',
-    url: `${BaseUrl}/success/v1/deleteSuccessStoryById/${id}`,
+    url: `https://executivetracking.cloudjiffy.net/Mahaasabha/success/v1/deleteSuccessStoryById/${id}`,
     headers
   })
     .then((res) => {
@@ -64,7 +64,7 @@ export const addSuccess = async (data, headers) => {
   try {
     return await axios({
       method: 'POST',
-      url: `${BaseUrl}/success/v1/createSuccessStory`,
+      url: `https://executivetracking.cloudjiffy.net/Mahaasabha/success/v1/createSuccessStory`,
       headers,
       data: data
     }).then(function (res) {

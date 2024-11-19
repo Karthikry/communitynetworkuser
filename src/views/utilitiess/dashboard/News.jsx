@@ -68,7 +68,7 @@ const News = () => {
     Authorization: `Bearer ${user.accessToken}`
   };
 
-  const ImageUrl = `${BaseUrl}/file/downloadFile/?filePath=`;
+  const ImageUrl = `https://executivetracking.cloudjiffy.net/Mahaasabha/file/downloadFile/?filePath=`;
 
   const fetchData = async () => {
     try {
@@ -168,7 +168,7 @@ const News = () => {
     data.append('file', selectedFile);
 
     try {
-      const res = await axios.post(`${BaseUrl}/file/uploadFile`, data, {
+      const res = await axios.post(`https://executivetracking.cloudjiffy.net/Mahaasabha/file/uploadFile`, data, {
         headers: {
           'content-type': 'multipart/form-data',
           Authorization: `Bearer ${user.accessToken}`

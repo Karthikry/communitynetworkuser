@@ -15,7 +15,7 @@ import { fetchBanner, addBanner, deleteBanner, getAdvertiseById, updatedAdvertis
 import { BaseUrl } from 'BaseUrl';
 import { useState, useEffect, useRef } from 'react';
 import moment from 'moment';
-import { Box, Button, Dialog, DialogActions, DialogTitle, TextField, Container, IconButton } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogTitle, TextField, IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import axios from 'axios';
 import { DeleteForever, Edit } from '@mui/icons-material';
@@ -52,26 +52,21 @@ const Banner = () => {
   const [advertisementId, setAdvertisementId] = useState(null);
   const inputRef = useRef(null);
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
+  // Retrieve the user token from session storage
   const user = JSON.parse(sessionStorage.getItem('user'));
+  const accessToken = user?.accessToken || '';
+
   const headers = {
     'Content-type': 'application/json',
-    Authorization: 'Bearer ' + user.accessToken
+    Authorization: `Bearer ${accessToken}`
   };
 
-  const ImageUrl = `${BaseUrl}/file/downloadFile/?filePath=`;
+  const ImageUrl = `https://executivetracking.cloudjiffy.net/Mahaasabha/file/downloadFile/?filePath=`;
 
+  // Fetch all banners
   const FetchData = async () => {
     try {
-      const res = await fetchBanner(headers);
+      const res = await fetchBanner(headers); // Include headers in the request
       const fetchedData = res.data.content;
 
       if (fetchedData) {
@@ -103,34 +98,7 @@ const Banner = () => {
     FetchData();
   }, [refreshTrigger]);
 
-  const postData = async (e) => {
-    e.preventDefault();
-    const formErrors = validateForm();
-
-    if (Object.keys(formErrors).length > 0) {
-      setErrors(formErrors);
-    } else {
-      try {
-        if (editMode) {
-          const updatedData = {
-            ...userdata,
-            advertisementId,
-            updatedBy: { userId: user.userId }
-          };
-          await updatedAdvertise(updatedData, headers);
-        } else {
-          await addBanner(userdata, headers);
-        }
-        setUserData({ advertisementName: '', description: '', fileName: '' });
-        inputRef.current.value = null;
-        setRefreshTrigger((prev) => !prev);
-        setOpen(false);
-      } catch (error) {
-        console.error('Error saving advertisement:', error);
-      }
-    }
-  };
-
+  // Handle file upload
   const onFileUpload = async (e) => {
     e.preventDefault();
     if (!selectedFile) {
@@ -141,18 +109,52 @@ const Banner = () => {
     data.append('file', selectedFile);
 
     try {
-      const res = await axios.post(`${BaseUrl}/file/uploadFile`, data, {
+      const res = await axios.post(`https://executivetracking.cloudjiffy.net/Mahaasabha/file/uploadFile`, data, {
         headers: {
           'content-type': 'multipart/form-data',
-          Authorization: 'Bearer ' + user.accessToken
+          Authorization: `Bearer ${accessToken}`
         }
       });
       setFileName(res.data.fileName);
-      alert(res.data.message);
       setUserData({ ...userdata, fileName: res.data.fileName });
       setFileError('');
+      alert('File uploaded successfully');
     } catch (error) {
       console.error('Error uploading file:', error);
+    }
+  };
+
+  // Add or update advertisement
+  const postData = async (e) => {
+    e.preventDefault();
+    const formErrors = validateForm();
+
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+    } else {
+      try {
+        // Upload the file if one is selected
+        if (selectedFile) {
+          await onFileUpload(e);
+        }
+
+        if (editMode) {
+          const updatedData = {
+            ...userdata,
+            advertisementId,
+            updatedBy: { userId: user.userId }
+          };
+          await updatedAdvertise(updatedData, headers); // Update banner
+        } else {
+          await addBanner(userdata, headers); // Add new banner
+        }
+        setUserData({ advertisementName: '', description: '', fileName: '' });
+        inputRef.current.value = null;
+        setRefreshTrigger((prev) => !prev);
+        setOpen(false);
+      } catch (error) {
+        console.error('Error saving advertisement:', error);
+      }
     }
   };
 
@@ -172,8 +174,8 @@ const Banner = () => {
       newErrors.description = 'Enter the description';
     }
 
-    if (!userdata.fileName || userdata.fileName.trim() === '') {
-      newErrors.fileName = 'Select the file';
+    if (!fileName) {
+      newErrors.fileName = 'Select and upload a file first';
     }
 
     return newErrors;
@@ -192,6 +194,7 @@ const Banner = () => {
     });
   };
 
+  // Add new banner
   const handleAddBanner = () => {
     setEditMode(false);
     setUserData({
@@ -202,11 +205,12 @@ const Banner = () => {
     setOpen(true);
   };
 
+  // Edit banner
   const handleEdit = async (advertisementId) => {
     setEditMode(true);
     setOpen(true);
     try {
-      const res = await getAdvertiseById(advertisementId, headers);
+      const res = await getAdvertiseById(advertisementId, headers); // Pass headers for access token
       const det = res.data;
 
       setAdvertisementId(det.advertisementId);
@@ -220,9 +224,10 @@ const Banner = () => {
     }
   };
 
+  // Delete banner
   const handleDelete = async (advertisementId) => {
     try {
-      await deleteBanner(advertisementId, headers);
+      await deleteBanner(advertisementId, headers); // Pass headers for access token
       FetchData();
     } catch (error) {
       console.error('Error deleting advertisement:', error);
@@ -262,22 +267,22 @@ const Banner = () => {
             <TableBody>
               {advertisement.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.advertisementId}>
-                  {columns.map((column) => (
-                    <TableCell key={column.id} align={column.align}>
-                      {column.id === 'actions' ? (
-                        <>
-                          <IconButton onClick={() => handleEdit(row.advertisementId)} color="primary">
-                            <Edit />
-                          </IconButton>
-                          <IconButton onClick={() => handleDelete(row.advertisementId)} color="error">
-                            <DeleteForever />
-                          </IconButton>
-                        </>
-                      ) : (
-                        row[column.id]
-                      )}
-                    </TableCell>
-                  ))}
+                  {columns.map((column) => {
+                    const value = row[column.id];
+                    return (
+                      <TableCell key={column.id} align={column.align}>
+                        {value}
+                      </TableCell>
+                    );
+                  })}
+                  <TableCell align="right">
+                    <IconButton onClick={() => handleEdit(row.advertisementId)}>
+                      <Edit />
+                    </IconButton>
+                    <IconButton onClick={() => handleDelete(row.advertisementId)}>
+                      <DeleteForever />
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -289,68 +294,51 @@ const Banner = () => {
           count={advertisement.length}
           rowsPerPage={rowsPerPage}
           page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
+          onPageChange={(e, newPage) => setPage(newPage)}
+          onRowsPerPageChange={(e) => {
+            setRowsPerPage(+e.target.value);
+            setPage(0);
+          }}
         />
       </Paper>
-      <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md">
-        <DialogTitle sx={{ fontSize: '16px' }}>{editMode ? 'Edit Advertisement' : 'Add Advertisement'}</DialogTitle>
-        <Box component="form" onSubmit={postData} noValidate sx={{ p: 3 }}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Advertisement Name"
-                name="advertisementName"
-                value={userdata.advertisementName}
-                onChange={changeHandler}
-                error={!!errors.advertisementName}
-                helperText={errors.advertisementName}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Description"
-                name="description"
-                value={userdata.description}
-                onChange={changeHandler}
-                error={!!errors.description}
-                helperText={errors.description}
-                multiline
-                rows={3}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                margin="normal"
-                fullWidth
-                id="fileName"
-                label="File Name"
-                name="fileName"
-                autoComplete="fileName"
-                value={userdata.fileName}
-                disabled
-                helperText={errors.fileName}
-                error={!!errors.fileName}
-                InputProps={{
-                  endAdornment: (
-                    <Button variant="contained" color="primary" onClick={onFileUpload}>
-                      Upload
-                    </Button>
-                  )
-                }}
-              />
-              <input type="file" onChange={onFileChange} ref={inputRef} style={{ marginTop: 20 }} />
-            </Grid>
-          </Grid>
+
+      {/* Dialog for adding/editing advertisement */}
+      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth>
+        <form onSubmit={postData}>
+          <DialogTitle>{editMode ? 'Update Advertisement' : 'Add Advertisement'}</DialogTitle>
+          <Box sx={{ p: 2 }}>
+            <TextField
+              margin="normal"
+              fullWidth
+              label="Advertisement Name"
+              name="advertisementName"
+              value={userdata.advertisementName}
+              onChange={changeHandler}
+              error={!!errors.advertisementName}
+              helperText={errors.advertisementName}
+            />
+            <TextField
+              margin="normal"
+              fullWidth
+              label="Description"
+              name="description"
+              value={userdata.description}
+              onChange={changeHandler}
+              error={!!errors.description}
+              helperText={errors.description}
+            />
+            <Button variant="contained" component="label">
+              Upload File
+              <input type="file" hidden onChange={onFileChange} ref={inputRef} />
+            </Button>
+            {fileError && <span style={{ color: 'red' }}>{fileError}</span>}
+            {fileName && <span>Selected File: {fileName}</span>}
+          </Box>
           <DialogActions>
             <Button onClick={() => setOpen(false)}>Cancel</Button>
-            <Button type="submit" variant="contained" color="primary">
-              Save
-            </Button>
+            <Button type="submit">{editMode ? 'Update' : 'Submit'}</Button>
           </DialogActions>
-        </Box>
+        </form>
       </Dialog>
     </MainCard>
   );

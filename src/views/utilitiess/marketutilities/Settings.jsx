@@ -7,14 +7,14 @@ import MainCard from 'ui-component/cards/MainCard';
 
 import { gridSpacing } from 'store/constant';
 
-const Payments = () => {
+const Settings = () => {
   const theme = useTheme();
 
   return (
-    <MainCard title=" Payments">
+    <MainCard title="Marketplace Settings">
       <Grid container spacing={gridSpacing}></Grid>
     </MainCard>
   );
 };
 
-export default Payments;
+export default Settings;

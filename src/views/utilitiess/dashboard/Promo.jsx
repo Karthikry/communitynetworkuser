@@ -8,7 +8,6 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Grid,
   Button,
   Dialog,
   DialogActions,
@@ -18,8 +17,7 @@ import {
   Box
 } from '@mui/material';
 import MainCard from 'ui-component/cards/MainCard';
-import { gridSpacing } from 'store/constant';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import moment from 'moment';
 import AddIcon from '@mui/icons-material/Add';
 import { DeleteForever, Edit } from '@mui/icons-material';
@@ -45,9 +43,7 @@ const Promo = () => {
   const [editMode, setEditMode] = useState(false);
   const [errors, setErrors] = useState({});
   const [promoId, setPromoId] = useState(null);
-  const inputRef = useRef(null);
   const [refreshTrigger, setRefreshTrigger] = useState(false);
-
   const [userdata, setUserData] = useState({
     promoName: '',
     description: '',
@@ -102,24 +98,20 @@ const Promo = () => {
   const fetchData = async () => {
     try {
       const res = await fetchPromo(headers);
-      const fetchedData = res.content;
+      const fetchedData = res.content || [];
 
-      if (fetchedData) {
-        const tableData = fetchedData.map((p) => ({
-          promoId: p.promoId,
-          promoName: p.promoName,
-          description: p.description,
-          youTube: p.youTube,
-          insertedDate: moment(p.insertedDate).format('L'),
-          updatedDate: moment(p.updatedDate).format('L'),
-          createdBy: p.createdBy ? p.createdBy.userName : 'No User',
-          updatedBy: p.updatedBy ? p.updatedBy.userName : 'No User'
-        }));
+      const tableData = fetchedData.map((p) => ({
+        promoId: p.promoId,
+        promoName: p.promoName,
+        description: p.description,
+        youTube: p.youTube,
+        insertedDate: moment(p.insertedDate).format('L'),
+        updatedDate: moment(p.updatedDate).format('L'),
+        createdBy: p.createdBy ? p.createdBy.userName || 'No User' : 'No User',
+        updatedBy: p.updatedBy ? p.updatedBy.userName || 'No User' : 'No User'
+      }));
 
-        setPromo(tableData);
-      } else {
-        setPromo([]);
-      }
+      setPromo(tableData);
     } catch (error) {
       console.error('Error fetching promo data:', error);
     }
@@ -140,8 +132,7 @@ const Promo = () => {
 
     try {
       // Fetch promo details by id
-      const res = await getPromoById(headers, id);
-      const det = res.data;
+      const det = await getPromoById(headers, id);
 
       if (det) {
         // Set promoId and userData with fetched data
@@ -152,7 +143,6 @@ const Promo = () => {
           youTube: det.youTube
         });
       } else {
-        // Handle case where no data is returned
         console.error('No promo data found for id:', id);
       }
     } catch (error) {
@@ -179,27 +169,36 @@ const Promo = () => {
     } else {
       try {
         if (editMode) {
+          // Prepare data for update
           const updatedData = {
-            ...userdata,
             promoId,
-            updatedBy: { userId: user.userId }
+            promoName: userdata.promoName,
+            description: userdata.description,
+            youTube: userdata.youTube,
+            updatedBy: { userId: user.userId } // Assuming your API expects this
           };
 
-          // Correct order of arguments
           await updatedPromo(updatedData, headers);
         } else {
-          await postPromoData(
-            {
-              ...userdata,
-              createdBy: { userId: user.userId }
-            },
-            headers
-          );
+          // Prepare data for creation
+          const newPromoData = {
+            promoName: userdata.promoName,
+            description: userdata.description,
+            youTube: userdata.youTube,
+            createdBy: { userId: user.userId } // Assuming your API expects this
+          };
+
+          await postPromoData(newPromoData, headers);
         }
+
+        // Reset userdata to clear form fields
         setUserData({ promoName: '', description: '', youTube: '' });
-        inputRef.current.value = null;
-        setRefreshTrigger((prev) => !prev);
+
+        // Close the dialog
         setOpen(false);
+
+        // Trigger refresh
+        setRefreshTrigger((prev) => !prev);
       } catch (error) {
         console.error('Error saving promo:', error);
       }
@@ -218,45 +217,53 @@ const Promo = () => {
             onClick={handleAddPromo}
           >
             Add
-            <AddIcon sx={{ color: '#fff' }} />
+            <AddIcon />
           </Button>
         </Box>
       }
     >
-      <Grid container spacing={gridSpacing}></Grid>
       <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
-          <Table stickyHeader aria-label="sticky table">
+        <TableContainer>
+          <Table stickyHeader>
             <TableHead>
               <TableRow>
                 {columns.map((column) => (
-                  <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth, fontWeight: 600, fontSize: 15 }}>
+                  <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth }}>
                     {column.label}
                   </TableCell>
                 ))}
               </TableRow>
             </TableHead>
             <TableBody>
-              {promo.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.promoId}>
-                  {columns.map((column) => (
-                    <TableCell key={column.id} align={column.align}>
-                      {column.id === 'actions' ? (
-                        <>
-                          <IconButton onClick={() => handleEdit(row.promoId)} color="primary">
-                            <Edit />
-                          </IconButton>
-                          <IconButton onClick={() => handleDelete(row.promoId)} color="error">
-                            <DeleteForever />
-                          </IconButton>
-                        </>
-                      ) : (
-                        row[column.id]
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
+              {promo
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row) => (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row.promoId}>
+                    {columns.map((column) => {
+                      const value = row[column.id];
+                      return (
+                        <TableCell key={column.id} align={column.align}>
+                          {column.id === 'youTube' ? (
+                            <a href={value} target="_blank" rel="noopener noreferrer">
+                              {value} {/* Show the URL as the link text */}
+                            </a>
+                          ) : column.id === 'actions' ? (
+                            <>
+                              <IconButton color="primary" onClick={() => handleEdit(row.promoId)}>
+                                <Edit />
+                              </IconButton>
+                              <IconButton color="secondary" onClick={() => handleDelete(row.promoId)}>
+                                <DeleteForever />
+                              </IconButton>
+                            </>
+                          ) : (
+                            value
+                          )}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
@@ -271,49 +278,48 @@ const Promo = () => {
         />
       </Paper>
 
-      <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md">
-        <DialogTitle sx={{ fontSize: '16px' }}>{editMode ? 'Edit Promo' : 'Add Promo'}</DialogTitle>
-        <Box component="form" onSubmit={postData} noValidate sx={{ p: 3 }}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Promo Name"
-                name="promoName"
-                value={userdata.promoName}
-                onChange={changeHandler}
-                error={!!errors.promoName}
-                helperText={errors.promoName}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Description"
-                name="description"
-                value={userdata.description}
-                onChange={changeHandler}
-                error={!!errors.description}
-                helperText={errors.description}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="YouTube URL"
-                name="youTube"
-                value={userdata.youTube}
-                onChange={changeHandler}
-                error={!!errors.youTube}
-                helperText={errors.youTube}
-                inputRef={inputRef}
-              />
-            </Grid>
-          </Grid>
-          <DialogActions sx={{ pt: 3 }}>
-            <Button onClick={() => setOpen(false)}>Cancel</Button>
-            <Button type="submit" variant="contained" color="primary">
-              Save
+      {/* Dialog for Adding/Editing Promo */}
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <DialogTitle>{editMode ? 'Edit Promo' : 'Add Promo'}</DialogTitle>
+        <Box component="form" onSubmit={postData} noValidate sx={{ m: 2 }}>
+          <TextField
+            required
+            name="promoName"
+            label="Promo Name"
+            value={userdata.promoName}
+            onChange={changeHandler}
+            error={!!errors.promoName}
+            helperText={errors.promoName}
+            fullWidth
+          />
+          <TextField
+            required
+            name="description"
+            label="Description"
+            value={userdata.description}
+            onChange={changeHandler}
+            error={!!errors.description}
+            helperText={errors.description}
+            fullWidth
+            multiline
+            rows={3}
+          />
+          <TextField
+            required
+            name="youTube"
+            label="YouTube URL"
+            value={userdata.youTube}
+            onChange={changeHandler}
+            error={!!errors.youTube}
+            helperText={errors.youTube}
+            fullWidth
+          />
+          <DialogActions>
+            <Button onClick={() => setOpen(false)} color="primary">
+              Cancel
+            </Button>
+            <Button type="submit" color="primary">
+              {editMode ? 'Update' : 'Add'}
             </Button>
           </DialogActions>
         </Box>
